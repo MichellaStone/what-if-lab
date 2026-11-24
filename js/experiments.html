@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+    content="Explore interactive experiments about gravity, planets, black holes, sunlight and sound at What If Lab.">
+
+  <title>Interactive Experiments | What If Lab</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="stylesheet" href="css/animations.css">
+
+  <script src="js/components.js" defer></script>
+
+  <script src="js/main.js" defer></script>
+
+  <script src="js/experiments.js" defer></script>
+
+</head>
+
+<body>
+
+  <header data-site-header></header>
+
+  <main class="container section">
+
+    <a href="index.html#experiments">
+      ← All experiments
+    </a>
+
+    <div style="margin-top:30px">
+
+      <div class="eyebrow" id="experiment-label">
+        Interactive Science
+      </div>
+
+      <h1 class="animate-fade-up"
+        id="experiment-title">
+        Explore the impossible.
+      </h1>
+
+      <p class="muted" id="experiment-description"></p>
+
+    </div>
+
+    <div class="control" style="margin:30px 0">
+
+      <label for="lab-picker">
+        Switch experiment
+      </label>
+
+      <select id="lab-picker"></select>
+
+    </div>
+
+    <div id="experiment-page">
+
+      <p class="muted">Loading experiment...</p>
+
+    </div>
+
+    <noscript>
+      Please enable JavaScript to use the simulators.
+    </noscript>
+
+  </main>
+
+  <footer data-site-footer></footer>
+
+</body>
+
+</html>
