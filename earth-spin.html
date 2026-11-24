@@ -8,7 +8,14 @@
 <meta name="description" content="What if Earth stopped spinning or rotated faster? Explore Earth's rotation, day length and equatorial speed through an interactive science simulation.">
 <title>What If Earth Stopped Spinning? | What If Lab</title>
 
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/animations.css">
+<script src="js/components.js" defer></script>
+<script src="js/main.js" defer></script>
+
 <style>
+@layer legacy {
 :root {
   --bg: #090d17;
   --panel: #111827;
@@ -350,12 +357,13 @@ summary {
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+}
 </style>
 </head>
 
 <body>
 
-<header>
+<header data-site-header>
   <div class="container nav">
     <a href="index.html" class="logo">whatif<span>lab.</span></a>
     <a href="index.html#experiments" class="back">← All experiments</a>
@@ -617,7 +625,7 @@ summary {
 </div>
 </main>
 
-<footer class="footer">
+<footer class="footer" data-site-footer>
   <div class="container footer-row">
     <a href="index.html" class="logo">whatif<span>lab.</span></a>
     <span>Built for curious minds.</span>
