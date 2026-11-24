@@ -1,0 +1,817 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090d17">
+<meta name="description" content="What if Earth stopped spinning or rotated faster? Explore Earth's rotation, day length and equatorial speed through an interactive science simulation.">
+<title>What If Earth Stopped Spinning? | What If Lab</title>
+
+<style>
+:root {
+  --bg: #090d17;
+  --panel: #111827;
+  --border: #263044;
+  --text: #f1f5f9;
+  --muted: #a1aec3;
+  --accent: #a69aff;
+  --green: #72dfc0;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.7;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+button, input { font: inherit; }
+
+button { cursor: pointer; }
+
+button:focus-visible, input:focus-visible, a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.container {
+  width: min(1150px, 92%);
+  margin: auto;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.logo {
+  color: white;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: -1.4px;
+}
+
+.logo span { color: var(--accent); }
+
+.back {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.hero {
+  padding: 65px 0 35px;
+  background: radial-gradient(ellipse at top right, #252247, transparent 55%);
+}
+
+.eyebrow {
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+h1 {
+  max-width: 850px;
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+  margin: 20px 0;
+}
+
+h1 span { color: var(--accent); }
+
+.hero p {
+  color: var(--muted);
+  max-width: 680px;
+  font-size: 17px;
+}
+
+.lab {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.lab-header {
+  padding: 18px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.live {
+  color: var(--green);
+  font-size: 12px;
+}
+
+.live::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+}
+
+.scene {
+  position: relative;
+  min-height: 440px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at center, #142b49, #070b15 70%);
+  overflow: hidden;
+}
+
+.scene svg {
+  width: 100%;
+  max-width: 470px;
+  position: relative;
+  z-index: 1;
+}
+
+.scene-label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.controls {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.control-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.speed-number {
+  font-size: 30px;
+  color: var(--accent);
+  font-weight: 750;
+}
+
+input[type=range] {
+  width: 100%;
+  accent-color: var(--accent);
+  margin: 20px 0 10px;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.presets button, .secondary {
+  background: #1c2538;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 10px;
+  transition: .2s;
+}
+
+.presets button:hover,
+.presets button.active,
+.secondary:hover {
+  border-color: var(--accent);
+  background: #30294e;
+}
+
+.reset {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.reset button { flex: 1; }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.metric {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.metric small {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+}
+
+.metric strong {
+  display: block;
+  color: var(--green);
+  font-size: clamp(23px, 3vw, 35px);
+  margin: 10px 0;
+  letter-spacing: -1px;
+}
+
+.metric p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0;
+}
+
+.insight {
+  background: #171c32;
+  border: 1px solid #393252;
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.insight h3 {
+  margin: 8px 0;
+  font-size: 22px;
+}
+
+.insight p {
+  color: #c1c9da;
+  margin-bottom: 0;
+}
+
+.science {
+  padding: 60px 0;
+  max-width: 850px;
+}
+
+.science h2 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.science h3 { margin-top: 32px; }
+
+.science p { color: var(--muted); }
+
+.formula {
+  background: #111827;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  text-align: center;
+  font-size: clamp(18px, 3vw, 25px);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.note {
+  border-left: 3px solid var(--accent);
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+details {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 12px 0;
+  padding: 18px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 30px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+@media(max-width: 760px) {
+  .workspace { grid-template-columns: 1fr; }
+  .scene { min-height: 320px; }
+  .controls { padding: 20px; }
+  .metrics { grid-template-columns: 1fr; }
+  .hero { padding-top: 40px; }
+  h1 { letter-spacing: -1.5px; }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo">whatif<span>lab.</span></a>
+    <a href="index.html#experiments" class="back">← All experiments</a>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <div class="container">
+    <div class="eyebrow">Experiment 04 / Earth Science</div>
+    <h1>What if Earth <span>stopped spinning?</span></h1>
+    <p>Imagine changing the speed of our planet. Would days become longer? Would you feel lighter? Take control of Earth's rotation and discover the science.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="lab">
+    <div class="lab-header">
+      <strong>Planetary Rotation Simulator</strong>
+      <span class="live">Interactive</span>
+    </div>
+
+    <div class="workspace">
+
+      <div class="scene">
+
+        <svg viewBox="0 0 400 380" role="img" aria-label="Stylized animation of Earth's rotation">
+
+          <defs>
+
+            <clipPath id="earthClip">
+              <circle cx="200" cy="180" r="110"/>
+            </clipPath>
+
+            <radialGradient id="ocean" cx="35%" cy="35%">
+              <stop offset="0%" stop-color="#438ed2"/>
+              <stop offset="65%" stop-color="#235e9d"/>
+              <stop offset="100%" stop-color="#12314e"/>
+            </radialGradient>
+
+            <linearGradient id="shadow">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity=".1"/>
+              <stop offset="50%" stop-color="#020711" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#020711" stop-opacity=".94"/>
+            </linearGradient>
+
+            <radialGradient id="glow">
+              <stop offset="65%" stop-color="#4289ff" stop-opacity="0"/>
+              <stop offset="83%" stop-color="#4289ff" stop-opacity=".3"/>
+              <stop offset="100%" stop-color="#4289ff" stop-opacity="0"/>
+            </radialGradient>
+
+            <g id="landMap" fill="#74ad8c">
+
+              <path d="M15 30 L40 15 65 22 81 12 104 35 96 48 74 57 66 76 47 72 36 55 17 46Z"/>
+
+              <path d="M74 80 L95 88 111 103 105 132 90 160 80 177 70 150 64 119Z"/>
+
+              <path d="M125 23 L142 14 162 24 159 43 137 50 121 37Z"/>
+
+              <path d="M154 59 L178 49 205 61 215 84 195 103 186 131 169 145 158 119 148 91Z"/>
+
+              <path d="M173 20 L202 9 230 17 252 11 280 29 311 25 340 47 329 68 301 74 285 96 267 77 244 62 221 77 198 51 180 46Z"/>
+
+              <path d="M280 123 L303 111 327 122 336 145 313 155 288 149Z"/>
+
+              <path d="M0 202 Q50 190 100 204 T200 202 T300 205 L360 220 H0Z" fill="#d0e5ea"/>
+
+            </g>
+
+          </defs>
+
+          <g id="stars"></g>
+
+          <ellipse cx="200" cy="180" rx="166" ry="55"
+            transform="rotate(-23 200 180)"
+            fill="none" stroke="#a69aff"
+            stroke-opacity=".25" stroke-dasharray="4 6"/>
+
+          <circle cx="200" cy="180" r="132" fill="url(#glow)"/>
+
+          <circle cx="200" cy="180" r="110" fill="url(#ocean)"/>
+
+          <g clip-path="url(#earthClip)">
+            <g transform="translate(90 70)">
+              <g id="rotatingMap">
+                <use href="#landMap" x="-360"/>
+                <use href="#landMap"/>
+                <use href="#landMap" x="360"/>
+              </g>
+            </g>
+
+            <ellipse cx="200" cy="180" rx="110" ry="30"
+              fill="none" stroke="#d9e9fa" stroke-opacity=".13"/>
+
+            <ellipse cx="200" cy="180" rx="110" ry="75"
+              fill="none" stroke="#d9e9fa" stroke-opacity=".13"/>
+
+            <circle cx="200" cy="180" r="110" fill="url(#shadow)"/>
+          </g>
+
+          <circle cx="200" cy="180" r="110"
+            fill="none" stroke="#8ac5ff" stroke-opacity=".7"/>
+
+          <line x1="150" y1="49" x2="250" y2="311"
+            stroke="#bdb2ff" stroke-opacity=".7"
+            stroke-dasharray="5 5"/>
+
+          <path d="M91 310 Q200 345 309 310"
+            fill="none" stroke="#a69aff" stroke-width="1.5"/>
+
+          <path d="M298 306 L309 310 302 320"
+            fill="none" stroke="#a69aff" stroke-width="1.5"/>
+
+          <text x="200" y="361" text-anchor="middle"
+            fill="#a1aec3" font-size="12" id="earthStatus">
+            NORMAL ROTATION
+          </text>
+
+        </svg>
+
+        <span class="scene-label">EARTH / STYLIZED VISUALIZATION</span>
+
+      </div>
+
+      <div class="controls">
+
+        <div class="eyebrow">Experiment controls</div>
+
+        <div class="control-heading">
+          <label for="rotation">Rotation speed</label>
+          <output class="speed-number" id="speedNumber">1.00×</output>
+        </div>
+
+        <input id="rotation" type="range"
+          min="0" max="4" step="0.01" value="1">
+
+        <div class="range-labels">
+          <span>Stopped</span>
+          <span>Normal</span>
+          <span>4× Faster</span>
+        </div>
+
+        <div class="presets">
+          <button data-speed="0">Stop rotation</button>
+          <button data-speed="0.5">Half speed</button>
+          <button data-speed="1" class="active">Normal Earth</button>
+          <button data-speed="4">4× Faster</button>
+        </div>
+
+        <div class="reset">
+          <button class="secondary" id="reset">↻ Reset</button>
+          <button class="secondary" id="pause">Pause animation</button>
+        </div>
+
+        <p style="color:var(--muted);font-size:13px">
+          Change the slider to explore hypothetical rotation speeds. The visual animation is accelerated for demonstration.
+        </p>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="metrics" aria-live="polite">
+
+    <div class="metric">
+      <small>Solar day length</small>
+      <strong id="dayLength">24.00 h</strong>
+      <p>Time between successive solar noons.</p>
+    </div>
+
+    <div class="metric">
+      <small>Equatorial speed</small>
+      <strong id="equatorSpeed">1,674 km/h</strong>
+      <p>Surface speed due to rotation.</p>
+    </div>
+
+    <div class="metric">
+      <small>Rotation period</small>
+      <strong id="period">23.93 h</strong>
+      <p>One complete spin relative to distant stars.</p>
+    </div>
+
+  </div>
+
+  <div class="insight" aria-live="polite">
+    <div class="eyebrow">What happens now?</div>
+    <h3 id="insightTitle">Life as we know it.</h3>
+    <p id="insightText"></p>
+  </div>
+
+  <article class="science">
+
+    <div class="eyebrow">Understand the science</div>
+
+    <h2>Why does Earth rotate?</h2>
+
+    <p>Earth inherited its rotation from the cloud of material that formed the Solar System billions of years ago. Because angular momentum is conserved, our planet continues to spin.</p>
+
+    <h3>What if Earth stopped suddenly?</h3>
+
+    <p>Objects at the equator currently move eastward at approximately 1,674 kilometres per hour due to Earth's rotation. If the solid Earth suddenly stopped, the atmosphere, oceans and unattached objects would initially retain much of their motion. The consequences would be catastrophic.</p>
+
+    <p>A gradual slowdown would be very different. The length of the solar day, atmospheric circulation and ocean distribution could change over time.</p>
+
+    <h3>Would one day last an entire year?</h3>
+
+    <p>If Earth stopped rotating relative to distant stars but continued orbiting the Sun, the Sun's apparent direction would still change over the course of the year. In this idealized model, a complete solar day would take approximately one orbital year.</p>
+
+    <h3>How is rotation speed calculated?</h3>
+
+    <div class="formula">v = 2πR / T</div>
+
+    <p>Here, v is the equatorial speed, R is Earth's equatorial radius and T is its rotation period. A shorter rotation period means a greater equatorial speed.</p>
+
+    <h3>Frequently asked questions</h3>
+
+    <details>
+      <summary>Is Earth currently slowing down?</summary>
+      <p>Over long periods, tidal interactions with the Moon tend to slow Earth's rotation. Short-term changes can also occur because of processes involving the atmosphere, oceans and Earth's interior.</p>
+    </details>
+
+    <details>
+      <summary>Would gravity disappear if Earth stopped spinning?</summary>
+      <p>No. Earth's gravitational attraction primarily comes from its mass. Stopping rotation would remove the centrifugal contribution that slightly reduces apparent weight, especially at the equator.</p>
+    </details>
+
+    <details>
+      <summary>What if Earth rotated four times faster?</summary>
+      <p>In this simplified model, Earth's rotation period would be approximately six hours. The centrifugal effect would increase, and a real planet's shape, weather and ocean circulation could also change.</p>
+    </details>
+
+    <details>
+      <summary>Why are the solar day and rotation period different?</summary>
+      <p>Earth moves along its orbit while rotating. It therefore needs to rotate slightly more than one full turn relative to distant stars for the Sun to return to the same position in the sky.</p>
+    </details>
+
+    <h3>Scientific references</h3>
+
+    <p>
+      <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html"
+        target="_blank" rel="noopener noreferrer">NASA Earth Fact Sheet ↗</a>
+    </p>
+
+    <p>
+      <a href="https://science.nasa.gov/earth/facts/"
+        target="_blank" rel="noopener noreferrer">NASA — Facts About Earth ↗</a>
+    </p>
+
+    <p class="note">This experiment is an educational mathematical model. It assumes Earth's radius and orbital period remain unchanged. It does not model changing planetary shape, atmospheric dynamics, ocean currents or structural consequences. The globe is a stylized illustration.</p>
+
+    <a href="index.html#experiments">← Explore more experiments</a>
+
+  </article>
+
+</div>
+</main>
+
+<footer class="footer">
+  <div class="container footer-row">
+    <a href="index.html" class="logo">whatif<span>lab.</span></a>
+    <span>Built for curious minds.</span>
+    <span>© <span id="year"></span> What If Lab</span>
+  </div>
+</footer>
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+const earthRadius = 6378.137;
+const normalPeriod = 23.9345;
+const orbitalHours = 365.256 * 24;
+
+let speed = 1;
+let offset = 0;
+let lastTime = 0;
+let paused = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+
+$("year").textContent = new Date().getFullYear();
+
+// Decorative stars
+
+for (let i = 0; i < 65; i++) {
+
+  const star = document.createElementNS(
+    "http://www.w3.org/2000/svg", "circle"
+  );
+
+  star.setAttribute("cx", (i * 73 + 17) % 400);
+  star.setAttribute("cy", (i * 47 + 13) % 380);
+  star.setAttribute("r", i % 4 === 0 ? 1.2 : 0.6);
+  star.setAttribute("fill", "#ffffff");
+  star.setAttribute("opacity", i % 3 === 0 ? .65 : .25);
+
+  $("stars").appendChild(star);
+
+}
+
+function formatDuration(hours) {
+
+  if (!Number.isFinite(hours)) return "No cycle";
+
+  if (hours > 48) {
+    return (hours / 24).toFixed(2) + " days";
+  }
+
+  return hours.toFixed(2) + " h";
+
+}
+
+function update() {
+
+  speed = Number($("rotation").value);
+
+  $("speedNumber").textContent = speed.toFixed(2) + "×";
+
+  const rotationFrequency = speed / normalPeriod;
+
+  const solarFrequency = Math.abs(
+    rotationFrequency - 1 / orbitalHours
+  );
+
+  const solarDay = solarFrequency < 0.000000001
+    ? Infinity
+    : 1 / solarFrequency;
+
+  const equatorSpeed =
+    2 * Math.PI * earthRadius * rotationFrequency;
+
+  $("dayLength").textContent = formatDuration(solarDay);
+
+  $("equatorSpeed").textContent =
+    Math.round(equatorSpeed).toLocaleString("en-US") + " km/h";
+
+  $("period").textContent =
+    speed === 0 ? "No rotation" :
+    formatDuration(normalPeriod / speed);
+
+  document.querySelectorAll("[data-speed]").forEach(btn => {
+
+    const active = Number(btn.dataset.speed) === speed;
+
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-pressed", String(active));
+
+  });
+
+  if (speed === 0) {
+
+    $("earthStatus").textContent = "ROTATION STOPPED";
+
+    $("insightTitle").textContent = "A day lasting an entire year.";
+
+    $("insightText").textContent =
+      "Earth no longer spins relative to distant stars, but it continues orbiting the Sun. In this model, the solar day becomes approximately 365 days long. A sudden stop would have catastrophic physical consequences.";
+
+  } else if (speed < 1) {
+
+    $("earthStatus").textContent = "SLOW ROTATION";
+
+    $("insightTitle").textContent = "The world slows down.";
+
+    $("insightText").textContent =
+      "Earth takes longer to complete one rotation. For the selected speed, solar days are longer than usual. The centrifugal effect is reduced, and real atmospheric and ocean circulation would change.";
+
+  } else if (speed === 1) {
+
+    $("earthStatus").textContent = "NORMAL ROTATION";
+
+    $("insightTitle").textContent = "Life as we know it.";
+
+    $("insightText").textContent =
+      "Earth completes one rotation relative to distant stars in approximately 23 hours and 56 minutes. Its average solar day is approximately 24 hours.";
+
+  } else {
+
+    $("earthStatus").textContent = "ACCELERATED ROTATION";
+
+    $("insightTitle").textContent = "Welcome to a faster world.";
+
+    $("insightText").textContent =
+      "Earth completes each rotation more quickly, producing shorter solar days. The centrifugal effect increases at the equator. A real planet could also experience major changes in its shape and climate.";
+
+  }
+
+}
+
+function setSpeed(value) {
+  $("rotation").value = value;
+  update();
+}
+
+$("rotation").addEventListener("input", update);
+
+document.querySelectorAll("[data-speed]").forEach(btn => {
+
+  btn.addEventListener("click", () => {
+    setSpeed(Number(btn.dataset.speed));
+  });
+
+});
+
+$("reset").addEventListener("click", () => {
+  offset = 0;
+  $("rotatingMap").setAttribute("transform", "translate(0 0)");
+  setSpeed(1);
+});
+
+function updatePauseButton() {
+
+  $("pause").textContent = paused
+    ? "Play animation"
+    : "Pause animation";
+
+  $("pause").setAttribute("aria-pressed", String(paused));
+
+}
+
+$("pause").addEventListener("click", () => {
+  paused = !paused;
+  updatePauseButton();
+});
+
+function animate(now) {
+
+  const delta = lastTime
+    ? Math.min(now - lastTime, 50) / 1000
+    : 0;
+
+  lastTime = now;
+
+  if (!paused && speed > 0) {
+
+    offset = (offset + speed * 24 * delta) % 360;
+
+    $("rotatingMap").setAttribute(
+      "transform", "translate(" + (-offset) + " 0)"
+    );
+
+  }
+
+  requestAnimationFrame(animate);
+
+}
+
+update();
+updatePauseButton();
+requestAnimationFrame(animate);
+
+</script>
+
+</body>
+</html>
