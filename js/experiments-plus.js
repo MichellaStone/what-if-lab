@@ -2102,12 +2102,29 @@
 
   /* INITIALIZE EXPERIMENT PACK */
 
-  function init() {
+ 
+async function init() {
 
-    installStyle();
-    addCards();
-    render();
+  try {
+
+    const {biologyLabs} = await import("./biology.js");
+
+    labs.push(...biologyLabs({
+      knob, metric, fmt, clamp, P,
+      line, path, circle, glow,
+      label, bar, arrow
+    }));
+
+  } catch (error) {
+
+    console.error("Biology pack:", error);
+
   }
+
+  installStyle();
+  addCards();
+  render();
+}
 
   if (document.readyState === "loading") {
 
