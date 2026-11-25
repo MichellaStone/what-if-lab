@@ -15,6 +15,216 @@
 <script src="js/main.js" defer></script>
   
 <script src="js/experiments.js" defer></script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const grid = document.querySelector("#experiments .cards");
+
+  if (!grid || grid.querySelector("[data-chem-world]")) return;
+
+  const worlds = [
+
+    [
+      "ocean-ph",
+      "Environmental Chemistry",
+      "What if the ocean became more acidic?",
+      "Explore ocean acidity, coral reefs, dissolved ions and marine ecosystems.",
+      "#52d8c7",
+      `<path d="M0 125 Q80 100 160 130 T320 120 V160 H0Z" fill="#214d58"/>
+       <path d="M110 130V50 M110 100L80 75 M110 80L135 55 M110 115L145 90 M200 130V65 M200 100L175 80 M200 90L230 62" fill="none" stroke="#ed928a" stroke-width="9" stroke-linecap="round"/>
+       <circle cx="55" cy="45" r="5"/><circle cx="245" cy="35" r="8"/>
+       <text x="160" y="28">pH ↓</text>`
+    ],
+
+    [
+      "reaction-clock",
+      "Chemical Kinetics",
+      "What if chemical reactions ran much faster?",
+      "Control reaction rates and investigate molecular transformation over time.",
+      "#ffb66e",
+      `<circle cx="55" cy="58" r="18"/>
+       <circle cx="85" cy="105" r="13"/>
+       <circle cx="55" cy="115" r="10"/>
+       <path d="M115 80H205 L188 65 M205 80L188 95" fill="none" stroke="currentColor" stroke-width="3"/>
+       <circle cx="248" cy="65" r="18"/>
+       <circle cx="248" cy="99" r="18" fill="#52d8c7"/>
+       <text x="160" y="140">A → B</text>`
+    ],
+
+    [
+      "salt-ice",
+      "Solution Chemistry",
+      "What if salt stopped water from freezing?",
+      "Compare salt water and pure water through a freezing-point challenge.",
+      "#91cfff",
+      `<rect x="45" y="43" width="90" height="85" rx="12" fill="#91cfff44" stroke="#91cfff"/>
+       <rect x="185" y="43" width="90" height="85" rx="12" fill="#277ca555" stroke="#91cfff"/>
+       <path d="M70 60L110 105 M110 60L70 105 M60 83H120" stroke="#d8f2ff" stroke-width="3"/>
+       <circle cx="211" cy="70" r="4"/><circle cx="247" cy="92" r="5"/><circle cx="230" cy="110" r="4"/>
+       <text x="90" y="145">H₂O</text><text x="230" y="145">NaCl + H₂O</text>`
+    ],
+
+    [
+      "osmosis-world",
+      "Biophysical Chemistry",
+      "What if cells lost control of water?",
+      "Investigate selective membranes, osmotic pressure and living cells.",
+      "#bd9bff",
+      `<ellipse cx="160" cy="80" rx="65" ry="57" fill="#bd9bff22" stroke="#bd9bff" stroke-width="4" stroke-dasharray="5 4"/>
+       <circle cx="160" cy="80" r="22" fill="#bd9bff55"/>
+       <circle cx="45" cy="42" r="6"/><circle cx="55" cy="113" r="6"/><circle cx="275" cy="75" r="6"/>
+       <path d="M55 75H105 L95 65 M105 75L95 85 M270 105H218 L228 95 M218 105L228 115" fill="none" stroke="#91cfff" stroke-width="3"/>
+       <text x="160" y="145">Osmosis</text>`
+    ],
+
+    [
+      "gas-chamber",
+      "Gas Laws",
+      "What if gases were squeezed into tiny spaces?",
+      "Operate a virtual piston and explore pressure, temperature and volume.",
+      "#7abfff",
+      `<rect x="100" y="35" width="120" height="105" rx="5" fill="#7abfff15" stroke="#7abfff" stroke-width="2"/>
+       <rect x="101" y="62" width="118" height="13" fill="#91a9bd"/>
+       <path d="M160 15V62" stroke="#91a9bd" stroke-width="12"/>
+       <circle cx="120" cy="93" r="5"/><circle cx="150" cy="118" r="6"/><circle cx="190" cy="92" r="5"/><circle cx="203" cy="125" r="4"/>
+       <text x="265" y="90">PV = nRT</text>`
+    ],
+
+    [
+      "light-detective",
+      "Analytical Chemistry",
+      "What if light could reveal invisible chemicals?",
+      "Use a virtual spectrometer to identify how substances absorb light.",
+      "#f18cce",
+      `<rect x="120" y="32" width="80" height="105" rx="5" fill="#f18cce55" stroke="#f18cce"/>
+       <path d="M20 80H120" stroke="#ffdb92" stroke-width="9"/>
+       <path d="M120 80H200" stroke="#ffdb9288" stroke-width="5"/>
+       <path d="M200 80H295" stroke="#ffdb9244" stroke-width="2"/>
+       <circle cx="25" cy="80" r="14" fill="#ffdb92"/>
+       <text x="160" y="151">Beer–Lambert law</text>`
+    ],
+
+    [
+      "equilibrium-world",
+      "Chemical Equilibrium",
+      "What if a reaction could never pick a side?",
+      "Explore reversible reactions and dynamic molecular equilibrium.",
+      "#9fe188",
+      `<circle cx="58" cy="50" r="17"/><circle cx="80" cy="105" r="17"/>
+       <circle cx="248" cy="50" r="17" fill="#7abfff"/><circle cx="260" cy="105" r="17" fill="#7abfff"/>
+       <path d="M110 65H210L194 51 M210 65L194 79 M210 100H110L126 86 M110 100L126 114" fill="none" stroke="currentColor" stroke-width="3"/>
+       <text x="160" y="145">A ⇌ B</text>`
+    ],
+
+    [
+      "ion-battery",
+      "Electrochemistry",
+      "What if a battery ran on concentration alone?",
+      "Explore ion gradients, electrode potential and a virtual voltage challenge.",
+      "#f9dc7e",
+      `<path d="M35 55V130H120V55 M200 55V130H285V55" fill="#7abfff22" stroke="#91cfff" stroke-width="2"/>
+       <path d="M77 110V25H243V110" fill="none" stroke="#f9dc7e" stroke-width="4"/>
+       <path d="M98 105V75Q160 25 222 75V105" fill="none" stroke="#b7c6ce" stroke-width="8"/>
+       <circle cx="160" cy="25" r="15" fill="#f9dc7e"/>
+       <text x="160" y="151">Δ concentration → voltage</text>`
+    ],
+
+    [
+      "isotope-clock",
+      "Nuclear Chemistry",
+      "What if atoms could tell us their age?",
+      "Explore radioactive decay, half-lives and isotope dating.",
+      "#b5d8ff",
+      `<circle cx="85" cy="77" r="45" fill="none" stroke="#b5d8ff" stroke-width="2"/>
+       <circle cx="70" cy="68" r="18"/>
+       <circle cx="100" cy="68" r="18" fill="#bd9bff"/>
+       <circle cx="85" cy="91" r="18"/>
+       <path d="M155 30V130H295 M160 40Q175 90 210 107T290 123" fill="none" stroke="#b5d8ff" stroke-width="3"/>
+       <text x="85" y="145">Isotope clock</text>`
+    ],
+
+    [
+      "molecule-separation",
+      "Chromatography",
+      "What if a mixture could separate into hidden colors?",
+      "Investigate pigment migration and solve a separation detective mission.",
+      "#f3a6a6",
+      `<rect x="108" y="15" width="104" height="130" rx="4" fill="#dbe7ea"/>
+       <path d="M108 125H212" stroke="#64748b" stroke-dasharray="5 3"/>
+       <path d="M108 30H212" stroke="#64748b" stroke-dasharray="5 3"/>
+       <ellipse cx="145" cy="90" rx="16" ry="9" fill="#e06c8a"/>
+       <ellipse cx="175" cy="52" rx="16" ry="9" fill="#4b82c3"/>
+       <ellipse cx="160" cy="112" rx="13" ry="7" fill="#f2b54c"/>
+       <text x="260" y="70">Rf</text>`
+    ]
+
+  ];
+
+  worlds.forEach(([id, field, title, desc, color, drawing], i) => {
+
+    const card = document.createElement("article");
+
+    card.className = "card";
+
+    card.dataset.chemWorld = id;
+
+    card.dataset.category = "chemistry";
+
+    card.dataset.search = [title, field, desc, id].join(" ");
+
+    card.innerHTML = `
+
+      <div class="art" aria-hidden="true"
+        style="background:radial-gradient(ellipse at center,${color}22,#0b1423 75%);">
+
+        <svg viewBox="0 0 320 160"
+          style="width:100%;height:100%;color:${color};"
+          xmlns="http://www.w3.org/2000/svg">
+
+          <g fill="${color}" font-size="11"
+            font-family="system-ui" text-anchor="middle">
+
+            ${drawing}
+
+          </g>
+
+        </svg>
+
+      </div>
+
+      <div class="card-content">
+
+        <div class="tag">${field} · ${51 + i}</div>
+
+        <h3>${title}</h3>
+
+        <p>${desc}</p>
+
+        <a class="explore"
+          href="chemistry-worlds.html?lab=${id}">
+
+          Explore experiment →
+
+        </a>
+
+      </div>
+
+    `;
+
+    grid.appendChild(card);
+
+  });
+
+  if (typeof filterCards === "function") {
+
+    filterCards();
+
+  }
+
+});
+</script>
+
 
 <style>
 @layer legacy {
