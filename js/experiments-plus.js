@@ -2160,6 +2160,18 @@ async function init() {
   render();
    
   if (labs.some(l =>
+    l.category === "math" &&
+    l.id === new URLSearchParams(location.search).get("lab")
+  )) {
+    try {
+      const {mountMath} = await import("./math-v2.js");
+      mountMath();
+    } catch (error) {
+      console.error("Mathematics V2:", error);
+    }
+  }
+   
+  if (labs.some(l =>
     l.category === "biology" &&
     l.id === new URLSearchParams(location.search).get("lab")
   )) {
