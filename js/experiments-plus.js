@@ -2124,6 +2124,18 @@ async function init() {
   installStyle();
   addCards();
   render();
+   
+  if (labs.some(l =>
+    l.category === "biology" &&
+    l.id === new URLSearchParams(location.search).get("lab")
+  )) {
+    try {
+      const {mountBiology} = await import("./biology-v2.js");
+      mountBiology({labs, draw, defaults, state});
+    } catch (error) {
+      console.error("Biology V2:", error);
+    }
+  }
 }
 
   if (document.readyState === "loading") {
