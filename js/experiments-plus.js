@@ -2121,7 +2121,22 @@ async function init() {
 
   }
 
-  installStyle();
+
+  try {
+
+    const {chemistryLabs} = await import("./chemistry.js");
+
+    labs.push(...chemistryLabs({
+      knob, metric, fmt, clamp, P,
+      line, path, circle, glow,
+      label, bar, arrow
+    }));
+
+  } catch (error) {
+
+    console.error("Chemistry pack:", error);
+
+  }  installStyle();
   addCards();
   render();
    
