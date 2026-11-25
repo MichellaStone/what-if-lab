@@ -2136,7 +2136,26 @@ async function init() {
 
     console.error("Chemistry pack:", error);
 
-  }  installStyle();
+ 
+  }
+
+  try {
+
+    const {mathLabs} = await import("./math.js");
+
+    labs.push(...mathLabs({
+      knob, metric, fmt, clamp, P,
+      line, path, circle, glow,
+      label, bar, arrow
+    }));
+
+  } catch (error) {
+
+    console.error("Mathematics pack:", error);
+
+  }
+
+  installStyle();
   addCards();
   render();
    
